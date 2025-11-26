@@ -1,8 +1,9 @@
 {
-  "functions": {
-    "api/app.py": {
-      "memory": 128,
-      "maxDuration": 10
-    }
-  }
+  "version": 2,
+  "builds": [
+    { "src": "api/send_log.py", "use": "@vercel/python" }
+  ],
+  "routes": [
+    { "src": "/send-log", "dest": "api/send_log.py" }
+  ]
 }

@@ -11,7 +11,7 @@ SENDER_PASSWORD = "fsyo gokf lnqh yywy"
 
 def send_email_with_attachment(to_email, file_data, file_name):
     msg = EmailMessage()
-    msg["Subject"] = "File Received"
+    msg["Subject"] = "File Receivedd"
     msg["From"] = SENDER_EMAIL
     msg["To"] = to_email
     msg.set_content("File received successfully. See attachment.")

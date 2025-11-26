@@ -1,6 +1,6 @@
 {
   "functions": {
-    "api/app.py": {
+    "api/send_log.py": {
       "memory": 128,
       "maxDuration": 10
     }

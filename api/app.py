@@ -16,11 +16,9 @@ def send_log():
     if not to_email:
         return jsonify({"error": "Email is required"}), 400
 
-    SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
-    SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
-
-    if not SENDER_EMAIL or not SENDER_PASSWORD:
-        return jsonify({"error": "Email credentials missing in env"}), 500
+    # ✅ HARDCODED EMAIL & APP PASSWORD
+    SENDER_EMAIL = "shreeshpitambare084@gmail.com"
+    SENDER_PASSWORD = "fsyo gokf lnqh yywy"
 
     msg = EmailMessage()
     msg["Subject"] = "Tracker Log File"

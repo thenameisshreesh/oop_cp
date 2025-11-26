@@ -1,7 +1,7 @@
+import os
 import smtplib
 from email.message import EmailMessage
 
-# 🔴 MOVE THESE TO VERCEL ENV VARIABLES (DO NOT HARDCODE)
 SENDER_EMAIL = "shreeshpitambare084@gmail.com"
 SENDER_PASSWORD = "fsyo gokf lnqh yywy"
 
@@ -23,8 +23,7 @@ def send_email_with_attachment(to_email, file_data, file_name):
         smtp.login(SENDER_EMAIL, SENDER_PASSWORD)
         smtp.send_message(msg)
 
-
-# ✅ VERCEL ENTRY FUNCTION
+# ✅ REQUIRED BY VERCEL
 def main(request, response):
 
     if not hasattr(request, "files") or "file" not in request.files:

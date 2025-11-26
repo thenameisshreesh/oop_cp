@@ -19,6 +19,9 @@ def send_log():
     SENDER_EMAIL = os.environ.get("SENDER_EMAIL")
     SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
 
+    if not SENDER_EMAIL or not SENDER_PASSWORD:
+        return jsonify({"error": "Email credentials missing in env"}), 500
+
     msg = EmailMessage()
     msg["Subject"] = "Tracker Log File"
     msg["From"] = SENDER_EMAIL

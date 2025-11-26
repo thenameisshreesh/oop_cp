@@ -1,5 +1,8 @@
 {
   "functions": {
-    "api/app.py": {}
+    "api/app.py": {
+      "memory": 128,
+      "maxDuration": 10
+    }
   }
 }

@@ -1,9 +1,10 @@
+# api/app.py
 from flask import Flask, request, jsonify
 import smtplib
 from email.message import EmailMessage
 import os
 
-app = Flask(__name__)  # <-- Vercel sees this "app"
+app = Flask(__name__)  # <-- This is what Vercel requires
 
 SENDER_EMAIL = "shreeshpitambare084@gmail.com"
 SENDER_PASSWORD = "fsyo gokf lnqh yywy"

@@ -1,11 +1,9 @@
-import os
 import smtplib
 from email.message import EmailMessage
 
-# ✅ ENV VARIABLES (Set these in Vercel Dashboard)
+# 🔴 MOVE THESE TO VERCEL ENV VARIABLES (DO NOT HARDCODE)
 SENDER_EMAIL = "shreeshpitambare084@gmail.com"
 SENDER_PASSWORD = "fsyo gokf lnqh yywy"
-
 
 def send_email_with_attachment(to_email, file_data, file_name):
     msg = EmailMessage()
@@ -26,15 +24,13 @@ def send_email_with_attachment(to_email, file_data, file_name):
         smtp.send_message(msg)
 
 
-# ✅ VERCEL ENTRY POINT (REPLACEMENT FOR @app.route)
+# ✅ VERCEL ENTRY FUNCTION
 def main(request, response):
 
-    # ✅ SAME AS: if "file" not in request.files
     if not hasattr(request, "files") or "file" not in request.files:
         response.status_code = 400
         return {"error": "No file sent"}
 
-    # ✅ SAME AS: request.form.get("email")
     to_email = request.form.get("email")
     if not to_email:
         response.status_code = 400
@@ -43,7 +39,6 @@ def main(request, response):
     file = request.files["file"]
 
     try:
-        # ✅ SEND FILE AS ATTACHMENT (NO SAVING NEEDED)
         send_email_with_attachment(to_email, file.read(), file.filename)
     except Exception as e:
         response.status_code = 500

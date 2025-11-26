@@ -1,6 +1,7 @@
 {
   "functions": {
     "api/app.py": {
+      "runtime": "vercel-python@0.9.0",
       "memory": 128,
       "maxDuration": 10
     }

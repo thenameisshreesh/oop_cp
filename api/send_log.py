@@ -4,10 +4,11 @@ import os
 import smtplib
 from email.message import EmailMessage
 
+# Function to send email
 def send_email_with_attachment(to_email, file_data, file_name):
     msg = EmailMessage()
     msg["Subject"] = "Tracker Log File"
-    msg["From"] = "shreeshpitambare084@gmail.com"
+    msg["From"] = os.environ.get("SENDER_EMAIL")
     msg["To"] = to_email
     msg.set_content("Tracker log attached.")
 
@@ -19,11 +20,11 @@ def send_email_with_attachment(to_email, file_data, file_name):
     )
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login("shreeshpitambare084@gmail.com", "fsyo gokf lnqh yywy")
+        smtp.login(os.environ.get("SENDER_EMAIL"), os.environ.get("SENDER_PASSWORD"))
         smtp.send_message(msg)
 
+# Entry point for Vercel serverless
 def handler(request, response):
-    # Vercel request.files gives a dict-like object
     if "file" not in request.files:
         response.status_code = 400
         return response.json({"error": "No file sent"})
@@ -35,7 +36,7 @@ def handler(request, response):
         return response.json({"error": "Email is required"})
 
     try:
-        send_email_with_attachment(file.read(), file.filename, to_email)
+        send_email_with_attachment(to_email, file.read(), file.filename)
     except Exception as e:
         response.status_code = 500
         return response.json({"error": str(e)})

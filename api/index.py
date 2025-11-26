@@ -15,7 +15,7 @@ SENDER_PASSWORD = "fsyo gokf lnqh yywy"   # Gmail App Password
 
 def send_email_with_attachment(to_email, file_path):
     msg = EmailMessage()
-    msg["Subject"] = "File Received"
+    msg["Subject"] = "File Receivedd"
     msg["From"] = SENDER_EMAIL
     msg["To"] = to_email
     msg.set_content("File received successfully. See attachment.")

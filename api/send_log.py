@@ -4,7 +4,6 @@ import os
 import smtplib
 from email.message import EmailMessage
 
-# Function to send email
 def send_email_with_attachment(to_email, file_data, file_name):
     msg = EmailMessage()
     msg["Subject"] = "Tracker Log File"
@@ -23,7 +22,6 @@ def send_email_with_attachment(to_email, file_data, file_name):
         smtp.login(os.environ.get("SENDER_EMAIL"), os.environ.get("SENDER_PASSWORD"))
         smtp.send_message(msg)
 
-# Entry point for Vercel serverless
 def handler(request, response):
     if "file" not in request.files:
         response.status_code = 400

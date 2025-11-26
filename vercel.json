@@ -4,6 +4,6 @@
     { "src": "api/app.py", "use": "@vercel/python" }
   ],
   "routes": [
-    { "src": "/send-log", "dest": "api/send_log.py" }
+    { "src": "/send-log", "dest": "api/app.py" }
   ]
 }

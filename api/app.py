@@ -1,5 +1,3 @@
-# api/send_log.py
-
 import os
 import smtplib
 from email.message import EmailMessage
@@ -19,24 +17,29 @@ def send_email_with_attachment(to_email, file_data, file_name):
     )
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(os.environ.get("SENDER_EMAIL"), os.environ.get("SENDER_PASSWORD"))
+        smtp.login(
+            os.environ.get("SENDER_EMAIL"),
+            os.environ.get("SENDER_PASSWORD")
+        )
         smtp.send_message(msg)
 
-def handler(request, response):
-    if "file" not in request.files:
+# ✅ REQUIRED by Vercel
+def main(request, response):
+    if not hasattr(request, "files") or "file" not in request.files:
         response.status_code = 400
-        return response.json({"error": "No file sent"})
+        return {"error": "No file sent"}
 
     file = request.files["file"]
     to_email = request.form.get("email")
+
     if not to_email:
         response.status_code = 400
-        return response.json({"error": "Email is required"})
+        return {"error": "Email is required"}
 
     try:
         send_email_with_attachment(to_email, file.read(), file.filename)
     except Exception as e:
         response.status_code = 500
-        return response.json({"error": str(e)})
+        return {"error": str(e)}
 
-    return response.json({"status": "success", "message": "File sent"})
+    return {"status": "success", "message": "File sent"}

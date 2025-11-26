@@ -1,26 +1,19 @@
 # api/send_log.py
 
-from flask import Flask, request, jsonify
+import os
 import smtplib
 from email.message import EmailMessage
-import os
+from werkzeug.datastructures import FileStorage
 
-app = Flask(__name__)
-
-# ✅ Environment variables
-SENDER_EMAIL = "shreeshpitambare084@gmail.com"
-SENDER_PASSWORD = "fsyo gokf lnqh yywy"
-
-def send_email_with_attachment(to_email, file_path):
+def send_email_with_attachment(to_email, file: FileStorage):
     msg = EmailMessage()
     msg["Subject"] = "Tracker Log File"
-    msg["From"] = SENDER_EMAIL
+    msg["From"] = os.environ.get("SENDER_EMAIL")
     msg["To"] = to_email
     msg.set_content("Tracker log attached.")
 
-    with open(file_path, "rb") as f:
-        file_data = f.read()
-        file_name = os.path.basename(file_path)
+    file_data = file.read()
+    file_name = file.filename
 
     msg.add_attachment(
         file_data,
@@ -30,26 +23,25 @@ def send_email_with_attachment(to_email, file_path):
     )
 
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-        smtp.login(SENDER_EMAIL, SENDER_PASSWORD)
+        smtp.login("shreeshpitambare084@gmail.com", "fsyo gokf lnqh yywy")
         smtp.send_message(msg)
 
-@app.route("/api/send-log", methods=["POST"])
-def send_log():
+# ====== Vercel entry point ======
+def handler(request, response):
     if "file" not in request.files:
-        return jsonify({"error": "No file sent"}), 400
+        response.status_code = 400
+        return response.json({"error": "No file sent"})
 
     to_email = request.form.get("email")
     if not to_email:
-        return jsonify({"error": "Email is required"}), 400
+        response.status_code = 400
+        return response.json({"error": "Email is required"})
 
     file = request.files["file"]
-    os.makedirs("/tmp/uploads", exist_ok=True)  # Vercel serverless temp dir
-    file_path = os.path.join("/tmp/uploads", file.filename)
-    file.save(file_path)
-
     try:
-        send_email_with_attachment(to_email, file_path)
+        send_email_with_attachment(to_email, file)
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        response.status_code = 500
+        return response.json({"error": str(e)})
 
-    return jsonify({"status": "success", "message": "File sent"})
+    return response.json({"status": "success", "message": "File sent"})

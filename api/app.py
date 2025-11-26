@@ -1,8 +1,10 @@
-from flask import Flask, request, jsonify
+import os
 import smtplib
 from email.message import EmailMessage
+from flask import Flask, request, jsonify
+from werkzeug.wsgi import DispatcherMiddleware
 
-app = Flask(__name__)  # ✅ This is required by Vercel
+app = Flask(__name__)
 
 @app.route("/send-log", methods=["POST"])
 def send_log():
@@ -15,12 +17,11 @@ def send_log():
     if not to_email:
         return jsonify({"error": "Email is required"}), 400
 
-    # ✅ USE ENV VARIABLES (NOT HARDCODE)
-    SENDER_EMAIL = "shreeshpitambare084@gmail.com"
-    SENDER_PASSWORD = "fsyo gokf lnqh yywy"
+    SENDER_EMAIL ="shreeshpitambare084@gmail.com"
+    SENDER_PASSWORD ="fsyo gokf lnqh yywy"
 
     if not SENDER_EMAIL or not SENDER_PASSWORD:
-        return jsonify({"error": "Email credentials not set in Vercel"}), 500
+        return jsonify({"error": "ENV variables not set"}), 500
 
     msg = EmailMessage()
     msg["Subject"] = "Tracker Log File"
@@ -42,4 +43,7 @@ def send_log():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-    return jsonify({"status": "success", "message": "File sent to email"})
+    return jsonify({"status": "success", "message": "File sent"})
+
+# ✅ THIS LINE IS WHAT VERMOCTELY FIXES YOUR ERROR
+handler = DispatcherMiddleware(app)
